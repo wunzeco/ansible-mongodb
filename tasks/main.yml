@@ -1,0 +1,17 @@
+---
+
+- name: Import mongodb-org public key
+  apt_key: keyserver=keyserver.ubuntu.com id=EA312927
+
+- name: Add mongodb-org apt repository to sources.list
+  apt_repository: repo="{{ mongodb_apt_repo }}" state=present update_cache=yes
+
+- name: Install mongodb
+  apt: name=mongodb-org state=present
+
+- name: Update mongodb config file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf
+  notify: Restart mongodb
+
+- name: Start mongodb
+  service: name=mongod enabled=yes state=started

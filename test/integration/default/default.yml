@@ -1,0 +1,5 @@
+---
+- hosts: test-kitchen
+
+  roles:
+    - ansible-mongodb

@@ -1,0 +1,19 @@
+---
+mongodb_version: 3.2
+mongodb_apt_repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
+
+# Storage
+mongod_dbpath: /var/lib/mongodb
+mongod_journal_enabled: true
+mongod_engine:
+mongod_mmapv1:
+mongod_wired_tiger:
+
+# System Log
+mongod_log_destination: file
+mongod_log_append: true
+mongod_log_path: /var/log/mongodb/mongod.log
+
+# Network Interfaces
+mongod_port: 27017
+mongod_bind_ip: "{{ ansible_default_ipv4.address }}"
