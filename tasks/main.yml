@@ -8,6 +8,7 @@
 
 - name: Install mongodb
   apt: name=mongodb-org state=present
+  register: installed
 
 - name: Update mongodb config file
   template: src=mongod.conf.j2 dest=/etc/mongod.conf
@@ -15,3 +16,7 @@
 
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
+
+- name: Restart mongodb
+  service: name=mongod state=restarted
+  when: installed.changed
