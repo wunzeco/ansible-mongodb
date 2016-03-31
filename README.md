@@ -1,4 +1,4 @@
-Java
+MongoDB
 ====
 
 Ansible role to install and configure MongoDB.
@@ -14,5 +14,6 @@ Features:
     - wunzeco.mongodb
 ```
 
-ToDo:
+## ToDo:
+
 - Replica Set config

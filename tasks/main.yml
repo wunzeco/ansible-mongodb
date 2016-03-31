@@ -8,15 +8,24 @@
 
 - name: Install mongodb
   apt: name=mongodb-org state=present
-  register: installed
+  notify: Restart mongodb
+
+- name: Ensure mongodb db data directory exists
+  file:
+    path:  "{{ mongodb_data_dir }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+    mode:  0755
+    state: directory
 
 - name: Update mongodb config file
-  template: src=mongod.conf.j2 dest=/etc/mongod.conf
+  template: 
+    src:   mongod.conf.j2
+    dest:  /etc/mongod.conf
+    owner: root
+    group: root
+    mode:  0644
   notify: Restart mongodb
 
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
-
-- name: Restart mongodb
-  service: name=mongod state=restarted
-  when: installed.changed

@@ -1,19 +1,152 @@
 ---
+mongodb_user:  mongodb
+mongodb_group: "{{ mongodb_user }}"
+
+mongodb_log_dir:  /var/log/mongodb
+mongodb_data_dir: /var/lib/mongodb
+
 mongodb_version: 3.2
 mongodb_apt_repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
 
-# Storage
-mongod_dbpath: /var/lib/mongodb
-mongod_journal_enabled: true
-mongod_engine:
-mongod_mmapv1:
-mongod_wired_tiger:
+###########
+## Config
+mongodb_storage:
+  dbPath: /var/lib/mongodb                   # mongod-only option
+  journal:
+    enabled: True                            # mongod-only option
 
-# System Log
-mongod_log_destination: file
-mongod_log_append: true
-mongod_log_path: /var/log/mongodb/mongod.log
+mongodb_systemLog:
+ path: /var/log/mongodb/mongod.log
+ logAppend: true
+ destination: file
 
-# Network Interfaces
-mongod_port: 27017
-mongod_bind_ip: "{{ ansible_default_ipv4.address }}"
+mongodb_net:
+ port: 27017
+ bindIp: "{{ ansible_default_ipv4.address }}"
+
+mongodb_processManagement:  {}           # See example config below 
+mongodb_security:           {}           # See example config below 
+mongodb_setParameter:       {}           # See example config below 
+mongodb_operationProfiling: {}           # See example config below 
+mongodb_replication:        {}           # See example config below 
+mongodb_sharding:           {}           # See example config below 
+mongodb_snmp:               {}           # See example config below 
+
+######################################
+## ## EXAMPLE config
+## ## Warning: Replace values of options with your desired values. 
+##             For further documentation, please see:
+##                http://docs.mongodb.org/manual/reference/configuration-options/
+#
+## mongodb_systemLog:
+##    verbosity: 0
+##    quiet: 0
+##    traceAllExceptions: false
+##    syslogFacility: user
+##    path: /var/log/mongodb/mongod.log
+##    logAppend: true
+##    logRotate: rename
+##    destination: file
+##    timeStampFormat: iso8601-local
+##    component:
+##        accessControl:
+##            verbosity: 0
+##       command:
+##            verbosity: 0
+## 
+## #mongodb_processManagement: {}       # ideally, leave as empty dict or know what you are doing
+## 
+## mongodb_processManagement:
+##     fork: false
+##     pidFilePath: /var/run/mongod.pid
+## 
+## mongodb_net:
+##    port: 27017
+##    bindIp: localhost              # {{ ansible_default_ipv4.address }}
+##    maxIncomingConnections: 65536
+##    wireObjectCheck: true
+##    ipv6: False
+##    unixDomainSocket:
+##       enabled: true
+##       pathPrefix: /tmp
+##       filePermissions: 0700
+##    http:
+##       enabled: false
+##       JSONPEnabled: false                         # mongoD-only option
+##       RESTInterfaceEnabled: false                 # mongoD-only option
+##    ssl:
+##       mode: allowSSL
+##       PEMKeyFile: /path/to/certificate.key
+##       PEMKeyPassword: MyKeyPassword
+## 
+## #mongodb_security: {}       # ideally, leave as empty dict or know what you are doing
+## mongodb_security:
+##    keyFile: /path/to/keyfile
+##    clusterAuthMode: keyFile
+##    authorization: disabled                    # mongoD-only option
+##    javascriptEnabled:  True
+##    sasl:
+##       hostName: fully.qualified.domain.name
+##       serviceName: mongodb
+##       saslauthdSocketPath: /path/to/sasslauthdSocket
+##    enableEncryption: False
+##    encryptionCipherMode: AES256-CBC
+##    encryptionKeyFile: /path/to/encryptionKeyFile
+##    kmip:
+##       keyIdentifier: uniqueKMIPIdentifier
+##       rotateMasterKey: False
+##       serverName: someServer
+##       port: 5696
+##       clientCertificateFile: /path/to/clientCertFile
+##       clientCertificatePassword: myclientCertPass
+##       serverCAFile: /path/to/ca.pem
+## 
+## #mongodb_setParameter: {}       
+## mongodb_setParameter:
+##     enableLocalhostAuthBypass: false
+##     connPoolMaxShardedConnsPerHost: 250
+## 
+## mongodb_storage:
+##    dbPath: /var/lib/mongodb                   # mongoD-only option
+##    indexBuildRetry: True                      # mongoD-only option
+##    repairPath: /var/lib/mongodb/_tmp          # mongoD-only option
+##    journal:
+##       enabled: True                           # mongoD-only option
+##       commitIntervalMs: 100                   # mongoD-only option
+##    directoryPerDB: False                      # mongoD-only option
+##    syncPeriodSecs: 60                         # mongoD-only option
+##    engine: wiredTiger
+##    wiredTiger:
+##       engineConfig:
+##          cacheSizeGB: 1
+##          statisticsLogDelaySecs: 0
+##          journalCompressor: snappy
+##          directoryForIndexes: false
+##       collectionConfig:
+##          blockCompressor: snappy
+##       indexConfig:
+##          prefixCompression: true
+## 
+## mongodb_operationProfiling:
+##    slowOpThresholdMs: 100                     # mongoD-only option
+##    mode: off                                  # mongoD-only option
+## 
+## mongodb_replication:
+##    oplogSizeMB: 1024                          # mongoD-only option
+##    replSetName: myReplSet                     # mongoD-only option
+##    secondaryIndexPrefetch: all                # mongoD-only option
+##    enableMajorityReadConcern: False
+##    localPingThresholdMs: 15                   # mongos-only option
+## 
+## mongodb_sharding:
+##    clusterRole: shardsvr                      # mongoD-only option
+##    archiveMovedChunks: false                
+##    autoSplit: true                            # mongoS-only option
+##    configDB: "configReplSet/cfgsvr1:port1"    # mongoS-only option
+##    chunkSize: 64                              # mongoS-only option
+## 
+## # snmp opts only for mongod
+## mongodb_snmp:
+##    subagent: true                             # mongoD-only option
+##    master: false                              # mongoD-only option
+## 

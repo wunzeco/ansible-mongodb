@@ -5,37 +5,173 @@
 
 # Where and how to store data.
 storage:
-  dbPath: {{ mongod_dbpath }}
-  journal:
-    enabled: {{ mongod_journal_enabled|string|lower }}
-#  engine:
-#  mmapv1:
-#  wiredTiger:
+{# I want storage.dbPath to be at top #}
+    dbPath: {{ mongodb_storage.dbPath|default(mongodb_data_dir) }}
+{% for key,value in mongodb_storage.iteritems() %}
+
+{%- if key == 'dbPath' %}
+{# skip storage.dbPath opt in this loop #}
+{#- value is STRING|NUMBER|BOOLEAN #}
+{% elif value is string or value is number or value is not iterable %}
+    {{ key }}: {{ value }}
+{# value is LIST #}
+{% elif value is iterable and value is not mapping %}
+    {{ key }}:
+{% for v in value %}
+        - {{ v }}
+{% endfor %}
+{# value is DICT #}
+{% elif value is mapping %}
+    {{ key }}:
+{% for k1,v1 in value.iteritems() %}
+
+{%- if v1 is string or v1 is number or v1 is not iterable %}
+        {{ k1 }}: {{ v1 }}
+{% else %}
+        {{ k1 }}:
+{% for k,v in v1|dictsort %}
+            {{ k }}: {{ v }}
+{% endfor %}
+{% endif -%}
+
+{% endfor %}
+{% endif -%}
+
+{% endfor %}
 
 # where to write logging data.
 systemLog:
-  destination: {{ mongod_log_destination }}
-  logAppend: {{ mongod_log_append|string|lower }}
-  path: {{ mongod_log_path }}
+{# I want systemLog.destination, logAppend and path to be at top #}
+    destination: {{ mongodb_systemLog.destination|default('file') }}
+    logAppend: {{ mongodb_systemLog.logAppend|default(true) }}
+    path: {{ mongodb_systemLog.path|default(mongodb_log_dir + '/mongod.log') }}
+{% for key,value in mongodb_systemLog.iteritems() %}
+
+{%- if key == 'destination' or key == 'logAppend' or key == 'path' %}
+{# skip destination, logAppend and path opts in this loop #}
+{# value is STRING|NUMBER|BOOLEAN #}
+{% elif value is string or value is number or value is not iterable %}
+    {{ key }}: {{ value }}
+{# value is LIST #}
+{% elif value is iterable and value is not mapping %}
+    {{ key }}:
+{% for v in value %}
+        - {{ v }}
+{% endfor %}
+{# value is DICT #}
+{% elif value is mapping %}
+    {{ key }}:
+{% for k1,v1 in value.iteritems() %}
+        {{ k1 }}:
+{% for k,v in v1|dictsort %}
+            {{ k }}: {{ v }}
+{% endfor %}
+{% endfor %}
+{% endif -%}
+
+{% endfor %}
 
 # network interfaces
 net:
-  port: {{ mongod_port }}
-  bindIp: {{ mongod_bind_ip }}
+{# I want net.port and net.bindIP to be at top #}
+    port: {{ mongodb_net.port|default(27017) }}
+    bindIp: {{ mongodb_net.bindIp|default(ansible_default_ipv4.address) }}
+{% for key,value in mongodb_net.iteritems() %}
 
+{%- if key == 'port' or key == 'bindIp' %}
+{# skip net.port and net.bindIP opts in this loop #}
+{# value is STRING|NUMBER|BOOLEAN #}
+{% elif value is string or value is number or value is not iterable %}
+    {{ key }}: {{ value }}
+{# value is LIST #}
+{% elif value is iterable and value is not mapping %}
+    {{ key }}:
+{% for v in value %}
+        - {{ v }}
+{% endfor %}
+{# value is DICT #}
+{% elif value is mapping %}
+    {{ key }}:
+{% for k,v in value.iteritems() %}
+	{{ k }}: {{ v }}
+{% endfor %}
+{% endif -%}
+
+{% endfor %}
 
 #processManagement:
+{% if mongodb_processManagement %}
+processManagement:
+{% for key,value in mongodb_processManagement|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 
 #security:
+{% if mongodb_security %}
+security:
+{% for key,value in mongodb_security.iteritems() %}
+
+{#- value is STRING|NUMBER|BOOLEAN #}
+{% if value is string or value is number or value is not iterable %}
+    {{ key }}: {{ value }}
+{# value is LIST #}
+{% elif value is iterable and value is not mapping %}
+    {{ key }}:
+{% for v in value %}
+        - {{ v }}
+{% endfor %}
+{# value is DICT #}
+{% elif value is mapping %}
+    {{ key }}:
+{% for k,v in value.iteritems() %}
+	{{ k }}: {{ v }}
+{% endfor %}
+{% endif -%}
+
+{% endfor %}
+{% endif %}
 
 #operationProfiling:
+{% if mongodb_operationProfiling %}
+operationProfiling:
+{% for key,value in mongodb_operationProfiling|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 
 #replication:
+{% if mongodb_replication %}
+replication:
+{% for key,value in mongodb_replication|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 
 #sharding:
+{% if mongodb_sharding %}
+sharding:
+{% for key,value in mongodb_sharding|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+
+#snmp:
+{% if mongodb_snmp %}
+snmp:
+{% for key,value in mongodb_snmp|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+
+#setParameter:
+{% if mongodb_setParameter %}
+setParameter:
+{% for key,value in mongodb_setParameter|dictsort %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
 
 ## Enterprise-Only Options:
 
 #auditLog:
-
-#snmp:
