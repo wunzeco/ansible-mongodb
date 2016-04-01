@@ -14,12 +14,6 @@ storage:
 {#- value is STRING|NUMBER|BOOLEAN #}
 {% elif value is string or value is number or value is not iterable %}
     {{ key }}: {{ value }}
-{# value is LIST #}
-{% elif value is iterable and value is not mapping %}
-    {{ key }}:
-{% for v in value %}
-        - {{ v }}
-{% endfor %}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
@@ -52,12 +46,6 @@ systemLog:
 {# value is STRING|NUMBER|BOOLEAN #}
 {% elif value is string or value is number or value is not iterable %}
     {{ key }}: {{ value }}
-{# value is LIST #}
-{% elif value is iterable and value is not mapping %}
-    {{ key }}:
-{% for v in value %}
-        - {{ v }}
-{% endfor %}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
@@ -83,12 +71,6 @@ net:
 {# value is STRING|NUMBER|BOOLEAN #}
 {% elif value is string or value is number or value is not iterable %}
     {{ key }}: {{ value }}
-{# value is LIST #}
-{% elif value is iterable and value is not mapping %}
-    {{ key }}:
-{% for v in value %}
-        - {{ v }}
-{% endfor %}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
@@ -115,12 +97,6 @@ security:
 {#- value is STRING|NUMBER|BOOLEAN #}
 {% if value is string or value is number or value is not iterable %}
     {{ key }}: {{ value }}
-{# value is LIST #}
-{% elif value is iterable and value is not mapping %}
-    {{ key }}:
-{% for v in value %}
-        - {{ v }}
-{% endfor %}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:

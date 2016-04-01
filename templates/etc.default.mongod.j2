@@ -1,5 +1,5 @@
-DAEMONUSER={{ mongodb_user }}
 ENABLE_MONGOD="yes"
-CONF=/etc/mongod.conf
+DAEMONUSER={{ mongodb_user }}
 DAEMONGROUP={{ mongodb_group }}
+CONF=/etc/mongod.conf
 DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}

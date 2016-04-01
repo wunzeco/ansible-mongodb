@@ -8,16 +8,23 @@ mongodb_data_dir: /var/lib/mongodb
 mongodb_version: 3.2
 mongodb_apt_repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
 
+###################  WARNING!  WARNING!  WARNING!  ############################
+## WARNING: Ensure you quote and lowercase any booleans. Unfortunately, mongodb
+##          config options parser ONLY recognises "true" and "false" as boolean
+##          values. Any other variation (e.g. True, False, etc) is seen as a
+##          string and will result in parser failure on mongod start.
+###############################################################################
+
 ###########
 ## Config
 mongodb_storage:
-  dbPath: /var/lib/mongodb                   # mongod-only option
+  dbPath: "{{ mongodb_data_dir }}"            # mongod-only option
   journal:
-    enabled: True                            # mongod-only option
+    enabled: "true"                            # mongod-only option
 
 mongodb_systemLog:
- path: /var/log/mongodb/mongod.log
- logAppend: true
+ path: "{{ mongodb_log_dir }}/mongod.log"
+ logAppend: "true"
  destination: file
 
 mongodb_net:
@@ -32,6 +39,11 @@ mongodb_replication:        {}           # See example config below
 mongodb_sharding:           {}           # See example config below 
 mongodb_snmp:               {}           # See example config below 
 
+mongodb_apply_defaults_settings: false   # updates /etc/default/mongod
+
+
+
+
 ######################################
 ## ## EXAMPLE config
 ## ## Warning: Replace values of options with your desired values. 
@@ -41,10 +53,10 @@ mongodb_snmp:               {}           # See example config below
 ## mongodb_systemLog:
 ##    verbosity: 0
 ##    quiet: 0
-##    traceAllExceptions: false
+##    traceAllExceptions: "false"
 ##    syslogFacility: user
 ##    path: /var/log/mongodb/mongod.log
-##    logAppend: true
+##    logAppend: "true"
 ##    logRotate: rename
 ##    destination: file
 ##    timeStampFormat: iso8601-local
@@ -57,23 +69,23 @@ mongodb_snmp:               {}           # See example config below
 ## #mongodb_processManagement: {}       # ideally, leave as empty dict or know what you are doing
 ## 
 ## mongodb_processManagement:
-##     fork: false
+##     fork: "false"
 ##     pidFilePath: /var/run/mongod.pid
 ## 
 ## mongodb_net:
 ##    port: 27017
 ##    bindIp: localhost              # {{ ansible_default_ipv4.address }}
 ##    maxIncomingConnections: 65536
-##    wireObjectCheck: true
-##    ipv6: False
+##    wireObjectCheck: "true"
+##    ipv6: "false"
 ##    unixDomainSocket:
-##       enabled: true
+##       enabled: "true"
 ##       pathPrefix: /tmp
 ##       filePermissions: 0700
 ##    http:
-##       enabled: false
-##       JSONPEnabled: false                         # mongoD-only option
-##       RESTInterfaceEnabled: false                 # mongoD-only option
+##       enabled: "false"
+##       JSONPEnabled: "false"                       # mongoD-only option
+##       RESTInterfaceEnabled: "false"               # mongoD-only option
 ##    ssl:
 ##       mode: allowSSL
 ##       PEMKeyFile: /path/to/certificate.key
@@ -84,17 +96,17 @@ mongodb_snmp:               {}           # See example config below
 ##    keyFile: /path/to/keyfile
 ##    clusterAuthMode: keyFile
 ##    authorization: disabled                    # mongoD-only option
-##    javascriptEnabled:  True
+##    javascriptEnabled:  "true"
 ##    sasl:
 ##       hostName: fully.qualified.domain.name
 ##       serviceName: mongodb
 ##       saslauthdSocketPath: /path/to/sasslauthdSocket
-##    enableEncryption: False
+##    enableEncryption: "false"
 ##    encryptionCipherMode: AES256-CBC
 ##    encryptionKeyFile: /path/to/encryptionKeyFile
 ##    kmip:
 ##       keyIdentifier: uniqueKMIPIdentifier
-##       rotateMasterKey: False
+##       rotateMasterKey: "false"
 ##       serverName: someServer
 ##       port: 5696
 ##       clientCertificateFile: /path/to/clientCertFile
@@ -103,17 +115,17 @@ mongodb_snmp:               {}           # See example config below
 ## 
 ## #mongodb_setParameter: {}       
 ## mongodb_setParameter:
-##     enableLocalhostAuthBypass: false
+##     enableLocalhostAuthBypass: "false"
 ##     connPoolMaxShardedConnsPerHost: 250
 ## 
 ## mongodb_storage:
 ##    dbPath: /var/lib/mongodb                   # mongoD-only option
-##    indexBuildRetry: True                      # mongoD-only option
+##    indexBuildRetry: "true"                    # mongoD-only option
 ##    repairPath: /var/lib/mongodb/_tmp          # mongoD-only option
 ##    journal:
-##       enabled: True                           # mongoD-only option
+##       enabled: "true"                         # mongoD-only option
 ##       commitIntervalMs: 100                   # mongoD-only option
-##    directoryPerDB: False                      # mongoD-only option
+##    directoryPerDB: "false"                    # mongoD-only option
 ##    syncPeriodSecs: 60                         # mongoD-only option
 ##    engine: wiredTiger
 ##    wiredTiger:
@@ -121,11 +133,11 @@ mongodb_snmp:               {}           # See example config below
 ##          cacheSizeGB: 1
 ##          statisticsLogDelaySecs: 0
 ##          journalCompressor: snappy
-##          directoryForIndexes: false
+##          directoryForIndexes: "false"
 ##       collectionConfig:
 ##          blockCompressor: snappy
 ##       indexConfig:
-##          prefixCompression: true
+##          prefixCompression: "true"
 ## 
 ## mongodb_operationProfiling:
 ##    slowOpThresholdMs: 100                     # mongoD-only option
@@ -135,18 +147,18 @@ mongodb_snmp:               {}           # See example config below
 ##    oplogSizeMB: 1024                          # mongoD-only option
 ##    replSetName: myReplSet                     # mongoD-only option
 ##    secondaryIndexPrefetch: all                # mongoD-only option
-##    enableMajorityReadConcern: False
+##    enableMajorityReadConcern: "false"
 ##    localPingThresholdMs: 15                   # mongos-only option
 ## 
 ## mongodb_sharding:
 ##    clusterRole: shardsvr                      # mongoD-only option
-##    archiveMovedChunks: false                
-##    autoSplit: true                            # mongoS-only option
+##    archiveMovedChunks: "false"                
+##    autoSplit: "true"                          # mongoS-only option
 ##    configDB: "configReplSet/cfgsvr1:port1"    # mongoS-only option
 ##    chunkSize: 64                              # mongoS-only option
 ## 
 ## # snmp opts only for mongod
 ## mongodb_snmp:
-##    subagent: true                             # mongoD-only option
-##    master: false                              # mongoD-only option
+##    subagent: "true"                           # mongoD-only option
+##    master: "false"                            # mongoD-only option
 ## 
