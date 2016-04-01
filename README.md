@@ -8,7 +8,9 @@ Features:
 - updates mongodb config
 
 
-> *WARNING:* Ensure you quote and lowercase any booleans. Unfortunately, mongodb
+> **WARNING:** 
+>
+>            Ensure you quote and lowercase any booleans. Unfortunately, mongodb
 >            config options parser ONLY recognises "true" and "false" as boolean
 >            values. Any other variation (e.g. True, False, etc) is seen as a
 >            string and will result in parser failure on mongod start.
