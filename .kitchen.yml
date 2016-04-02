@@ -1,15 +1,25 @@
 ---
 driver:
   name: vagrant
+  network:
+    - ["private_network", { type: "dhcp" }]
 
 provisioner:
   name: ansible_playbook
   hosts: test-kitchen
   ansible_verbose: false
   ansible_verbosity: 2
+  ansible_diff: true
 
 platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: default
+  - name: node1
+    driver:
+      network:
+        - ["private_network", { ip: "172.29.129.20" }]
+  - name: node0
+    driver:
+      network:
+        - ["private_network", { ip: "172.29.129.10" }]

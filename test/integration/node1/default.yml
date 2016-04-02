@@ -1,0 +1,23 @@
+---
+- hosts: test-kitchen
+
+  vars:
+    mongodb_net:
+      port: 27017
+      bindIp: "{{ ansible_eth1.ipv4.address }}"
+    mongodb_replication:
+      replSetName: rs0
+    mongodb_is_primary: false
+    mongodb_create_replica_set: false
+    mongodb_replica_set_members: [ "node0.internal:27017", "node1.internal:27017" ]
+    host_entries:
+      - { name: "node0.internal", ip: "172.29.129.10" }
+      - { name: "node1.internal", ip: "172.29.129.20" }
+
+  pre_tasks:
+    - name: Add host entries for mongodb replica set members
+      lineinfile: dest=/etc/hosts regexp='^{{ item.ip }}' line='{{ item.ip }} {{ item.name }}' owner=root group=root mode=0644
+      with_items: host_entries
+
+  roles:
+    - ansible-mongodb
