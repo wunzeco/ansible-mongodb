@@ -1,0 +1,6 @@
+rsconf = {
+    _id: "{{ mongodb_replication.replSetName }}",
+    members: [
+            { _id: 0, host: "{{ mongodb_primary }}:{{ mongodb_net.port }}" }
+             ]
+}
