@@ -36,6 +36,21 @@ Features:
 ### MongoDB Replica Set installation
 
 ```
+- hosts: node1.internal				# SECONDARY
+
+  vars:
+    mongodb_net:
+      port: 27017
+      bindIp: "{{ ansible_eth0.ipv4.address }}"
+    mongodb_replication:
+      replSetName: rs0
+    mongodb_is_primary: false
+    mongodb_replica_set_members: [ "node0.internal:27017", "node1.internal:27017" ]
+
+  roles:
+    - wunzeco.mongodb
+
+
 - hosts: node0.internal				# PRIMARY
 
   vars:
@@ -46,21 +61,6 @@ Features:
       replSetName: rs0
     mongodb_is_primary: true
     mongodb_create_replica_set: true
-    mongodb_replica_set_members: [ "node0.internal:27017", "node1.internal:27017" ]
-
-  roles:
-    - wunzeco.mongodb
-
-
-- hosts: node1.internal				# SECONDARY
-
-  vars:
-    mongodb_net:
-      port: 27017
-      bindIp: "{{ ansible_eth0.ipv4.address }}"
-    mongodb_replication:
-      replSetName: rs0
-    mongodb_is_primary: false
     mongodb_replica_set_members: [ "node0.internal:27017", "node1.internal:27017" ]
 
   roles:
