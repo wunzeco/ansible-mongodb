@@ -1,0 +1,4 @@
+[replica_set]
+name={{ mongodb_replication.replSetName }}
+members={{ mongodb_replica_set_members|join(',') }}
+primary={{ mongodb_primary }}
