@@ -5,6 +5,8 @@ mongodb_group: "{{ mongodb_user }}"
 mongodb_log_dir:  /var/log/mongodb
 mongodb_data_dir: /var/lib/mongodb
 
+###########
+## Package
 mongodb_version: 3.2
 mongodb_apt_repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
 
@@ -17,6 +19,12 @@ mongodb_apt_repo: "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distributio
 
 ###########
 ## Config
+mongodb_is_primary: false
+mongodb_create_replica_set: false
+mongodb_replica_set_members: []           # list of "fqdn:port" tuple (port is NOT optional)
+mongodb_primary: "{{ mongodb_replica_set_members[0].split(':')|first }}"
+mongodb_apply_defaults_settings: false   # updates /etc/default/mongod
+
 mongodb_storage:
   dbPath: "{{ mongodb_data_dir }}"            # mongod-only option
   journal:
@@ -39,7 +47,6 @@ mongodb_replication:        {}           # See example config below
 mongodb_sharding:           {}           # See example config below 
 mongodb_snmp:               {}           # See example config below 
 
-mongodb_apply_defaults_settings: false   # updates /etc/default/mongod
 
 
 

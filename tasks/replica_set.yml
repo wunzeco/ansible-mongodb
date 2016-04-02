@@ -1,0 +1,61 @@
+---
+
+- meta: flush_handlers
+
+- name: Ensure ansible local facts directory exists
+  file: path={{ item }} owner=root group=root mode=0755 state=directory
+  with_items:
+    - "/etc/ansible"
+    - "/etc/ansible/facts.d"
+
+- name: Install custom mongodb local fact
+  template: src=mongodb.fact.j2 dest=/etc/ansible/facts.d/mongodb.fact mode=0644
+  register: fact
+
+#- debug: var=fact
+
+- name: Re-read facts after adding custom mongodb fact
+  setup: filter=ansible_local
+  when: fact|changed
+
+- debug: msg="{{ ansible_local.mongodb }}"
+
+- name: Check if replica set has been initialized
+  shell: >
+      mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
+          --quiet --eval "rs.status().ok" 
+  register: rs_ok
+
+#- debug: var=rs_ok
+
+- name: Create initial mongodb rs config
+  template: src=rs_config.js.j2 dest=/var/tmp/rs_config.js
+
+- name: Initialize replica set on mongodb primary
+  shell: >
+      mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
+          --quiet --eval 'load("/var/tmp/rs_config.js"); rs.initiate(rsconf)'
+  when: rs_ok.stdout == '0'
+  register: rs_init
+
+#- debug: var=rs_init
+
+- name: Get list of current mongodb replica set members
+  shell: >
+      mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
+          --quiet --eval 'db.isMaster().hosts'
+  register: members
+
+- name: Set variable for current members
+  set_fact: rs_members="{{ members.stdout|string|from_json }}"
+  
+#- debug: var=rs_members
+
+- name: List of new mongodb replica set members (secondaries) to add
+  debug: msg="{{ mongodb_replica_set_members|difference(rs_members) }}"
+
+- name: Add mongodb secondaries to replica set
+  shell: > 
+      mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
+          --quiet --eval 'rs.add("{{ item }}")'
+  with_items: "{{ mongodb_replica_set_members|difference(rs_members) }}"
