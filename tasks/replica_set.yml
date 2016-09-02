@@ -49,13 +49,13 @@
 - name: Set variable for current members
   set_fact: rs_members="{{ members.stdout|string|from_json }}"
   
-#- debug: var=rs_members
+- debug: var=rs_members
 
 - name: List of new mongodb replica set members (secondaries) to add
-  debug: msg="{{ mongodb_replica_set_members|difference(rs_members) }}"
+  debug: msg="{{ mongodb_replica_set_members|difference(rs_members|default([])) }}"
 
 - name: Add mongodb secondaries to replica set
   shell: > 
       mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
           --quiet --eval 'rs.add("{{ item }}")'
-  with_items: "{{ mongodb_replica_set_members|default([])|difference(rs_members) }}"
+  with_items: "{{ mongodb_replica_set_members|difference(rs_members|default([])) }}"
