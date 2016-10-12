@@ -37,6 +37,17 @@
   notify: Restart mongodb
   when: mongodb_apply_defaults_settings 
 
+- name: Create disable-transparent-hugepages init script
+  copy: 
+    src:   disable-transparent-hugepages
+    dest:  /etc/init.d/disable-transparent-hugepages
+    owner: root
+    group: root
+    mode:  0755
+
+- name: Enable disable-transparent-hugepages init script
+  service: name=disable-transparent-hugepages enabled=yes
+
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
 
