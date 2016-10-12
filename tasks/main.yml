@@ -51,6 +51,12 @@
   service: name=disable-transparent-hugepages enabled=yes
   when: mongodb_disable_thp
 
+- name: Disable transparent hugepages
+  shell: /etc/init.d/disable-transparent-hugepages start && touch /tmp/thp
+  args:
+    creates: /tmp/thp
+  when: mongodb_disable_thp
+
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
 

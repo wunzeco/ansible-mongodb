@@ -17,7 +17,7 @@
   pre_tasks:
     - name: Add host entries for mongodb replica set members
       lineinfile: dest=/etc/hosts regexp='^{{ item.ip }}' line='{{ item.ip }} {{ item.name }}' owner=root group=root mode=0644
-      with_items: host_entries
+      with_items: "{{ host_entries }}"
 
   roles:
     - ansible-mongodb
