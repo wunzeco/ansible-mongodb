@@ -44,9 +44,12 @@
     owner: root
     group: root
     mode:  0755
+  notify: Restart mongodb
+  when: mongodb_disable_thp
 
 - name: Enable disable-transparent-hugepages init script
   service: name=disable-transparent-hugepages enabled=yes
+  when: mongodb_disable_thp
 
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
