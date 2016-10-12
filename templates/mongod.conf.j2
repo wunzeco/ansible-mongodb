@@ -11,20 +11,30 @@ storage:
 
 {%- if key == 'dbPath' %}
 {# skip storage.dbPath opt in this loop #}
-{#- value is STRING|NUMBER|BOOLEAN #}
-{% elif value is string or value is number or value is not iterable %}
+{#- value is BOOLEAN #}
+{% elif value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
 {% for k1,v1 in value.iteritems() %}
 
-{%- if v1 is string or v1 is number or v1 is not iterable %}
+{%- if v1|string  == 'True' or v1|string == 'False' %}
+        {{ k1 }}: {{ v1|lower }}
+{% elif v1 is string or v1 is number %}
         {{ k1 }}: {{ v1 }}
 {% else %}
         {{ k1 }}:
 {% for k,v in v1|dictsort %}
+{%- if v|string  == 'True' or v|string == 'False' %}
+            {{ k }}: {{ v|lower }}
+{% elif v is string or v is number %}
             {{ k }}: {{ v }}
+{% endif -%}
+
 {% endfor %}
 {% endif -%}
 
@@ -37,14 +47,17 @@ storage:
 systemLog:
 {# I want systemLog.destination, logAppend and path to be at top #}
     destination: {{ mongodb_systemLog.destination|default('file') }}
-    logAppend: {{ mongodb_systemLog.logAppend|default(true) }}
+    logAppend: {{ mongodb_systemLog.logAppend|default(true)|lower }}
     path: {{ mongodb_systemLog.path|default(mongodb_log_dir + '/mongod.log') }}
 {% for key,value in mongodb_systemLog.iteritems() %}
 
 {%- if key == 'destination' or key == 'logAppend' or key == 'path' %}
 {# skip destination, logAppend and path opts in this loop #}
-{# value is STRING|NUMBER|BOOLEAN #}
-{% elif value is string or value is number or value is not iterable %}
+{#- value is BOOLEAN #}
+{% elif value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
 {# value is DICT #}
 {% elif value is mapping %}
@@ -68,14 +81,21 @@ net:
 
 {%- if key == 'port' or key == 'bindIp' %}
 {# skip net.port and net.bindIP opts in this loop #}
-{# value is STRING|NUMBER|BOOLEAN #}
-{% elif value is string or value is number or value is not iterable %}
+{#- value is BOOLEAN #}
+{% elif value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
 {% for k,v in value.iteritems() %}
+{% if v|string == 'True' or v|string == 'False' %}
+	{{ k }}: {{ v|lower }}
+{% else %}
 	{{ k }}: {{ v }}
+{% endif %}
 {% endfor %}
 {% endif -%}
 
@@ -94,14 +114,21 @@ processManagement:
 security:
 {% for key,value in mongodb_security.iteritems() %}
 
-{#- value is STRING|NUMBER|BOOLEAN #}
-{% if value is string or value is number or value is not iterable %}
+{#- value is BOOLEAN #}
+{% if value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
 {# value is DICT #}
 {% elif value is mapping %}
     {{ key }}:
 {% for k,v in value.iteritems() %}
+{% if v|string == 'True' or v|string == 'False' %}
+	{{ k }}: {{ v|lower }}
+{% else %}
 	{{ k }}: {{ v }}
+{% endif %}
 {% endfor %}
 {% endif -%}
 
@@ -120,7 +147,13 @@ operationProfiling:
 {% if mongodb_replication %}
 replication:
 {% for key,value in mongodb_replication|dictsort %}
+{#- value is BOOLEAN #}
+{% if value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
+{% endif %}
 {% endfor %}
 {% endif %}
 
@@ -128,7 +161,13 @@ replication:
 {% if mongodb_sharding %}
 sharding:
 {% for key,value in mongodb_sharding|dictsort %}
+{#- value is BOOLEAN #}
+{% if value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
+{% endif %}
 {% endfor %}
 {% endif %}
 
@@ -136,7 +175,13 @@ sharding:
 {% if mongodb_snmp %}
 snmp:
 {% for key,value in mongodb_snmp|dictsort %}
+{#- value is BOOLEAN #}
+{% if value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
+{% endif %}
 {% endfor %}
 {% endif %}
 
@@ -144,7 +189,13 @@ snmp:
 {% if mongodb_setParameter %}
 setParameter:
 {% for key,value in mongodb_setParameter|dictsort %}
+{#- value is BOOLEAN #}
+{% if value|string == 'True' or value|string == 'False' %}
+    {{ key }}: {{ value|lower }}
+{#- value is STRING|NUMBER #}
+{% elif value is string or value is number %}
     {{ key }}: {{ value }}
+{% endif %}
 {% endfor %}
 {% endif %}
 
