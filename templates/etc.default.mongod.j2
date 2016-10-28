@@ -1,5 +1,7 @@
+{% if ansible_os_family|lower == 'debian' %}
 ENABLE_MONGOD="yes"
 DAEMONUSER={{ mongodb_user }}
 DAEMONGROUP={{ mongodb_group }}
-CONF=/etc/mongod.conf
+CONF={{ mongodb_conf_file }}
 DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+{% endif %}

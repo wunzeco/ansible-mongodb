@@ -1,0 +1,6 @@
+---
+
+mongodb_user:  mongodb
+mongodb_group: "{{ mongodb_user }}"
+
+mongodb_data_dir: /var/lib/mongodb

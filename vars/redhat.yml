@@ -1,0 +1,9 @@
+---
+
+mongodb_user:  mongod
+mongodb_group: "{{ mongodb_user }}"
+
+mongodb_data_dir: /var/lib/mongodb
+mongodb_processManagement:
+  fork: "true"
+  pidFilePath: /var/run/mongodb/mongod.pid

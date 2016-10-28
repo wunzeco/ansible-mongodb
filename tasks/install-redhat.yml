@@ -1,0 +1,15 @@
+---
+
+- name: Add mongodb yum repository
+  template:
+    src:   mongodb.yum.repo.j2
+    dest:  /etc/yum.repos.d/mongodb-org-{{ mongodb_repo_version }}.repo
+    owner: root
+    group: root
+    mode:  0644
+
+- name: Install mongodb
+  yum:
+    name:  "mongodb-org-{{ mongodb_version|default('*') }}"
+    state: present
+  notify: Restart mongodb

@@ -1,0 +1,6 @@
+[mongodb-org-{{ mongodb_repo_version }}]
+name=MongoDB Repository
+baseurl={{ mongodb_yum_repo_baseurl }}
+gpgcheck=1
+enabled=1
+gpgkey={{ mongodb_signing_key_url }}

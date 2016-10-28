@@ -1,0 +1,18 @@
+---
+
+- name: Import mongodb-org gpg public signing key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: EA312927
+
+- name: Add mongodb-org apt repository to sources.list
+  apt_repository:
+    repo:         "{{ mongodb_apt_repo }}"
+    update_cache: yes
+    state:        present
+
+- name: Install mongodb
+  apt:
+    name:  "mongodb-org={{ mongodb_version|default('*') }}"
+    state: present
+  notify: Restart mongodb

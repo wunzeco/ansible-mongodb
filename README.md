@@ -75,7 +75,8 @@ use FQDN for each replica set member (not IP, especially in production).
 To run integration tests of this role
 
 ```
-kitchen verify && kitchen destroy
+PLATFORM=ubuntu                              # OR centos
+kitchen verify $PLATFORM && kitchen destroy $PLATFORM
 ```
 
 > **Note:**  

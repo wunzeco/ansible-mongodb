@@ -2,9 +2,10 @@
 - hosts: test-kitchen
 
   vars:
+    mongodb_net_bind_ip: "{{ ansible_eth1.ipv4.address }}"
     mongodb_net:
       port: 27017
-      bindIp: "{{ ansible_eth1.ipv4.address }}"
+      bindIp: "{{ mongodb_net_bind_ip }}"
     mongodb_replication:
       replSetName: rs0
     mongodb_is_primary: true
@@ -15,6 +16,10 @@
       - { name: "node1.internal", ip: "172.29.129.20" }
 
   pre_tasks:
+    - name: Set bind ip
+      set_fact: mongodb_net_bind_ip="{{ ansible_enp0s8.ipv4.address }}"
+      when: ansible_os_family|lower == 'redhat'
+
     - name: Add host entries for mongodb replica set members
       lineinfile: dest=/etc/hosts regexp='^{{ item.ip }}' line='{{ item.ip }} {{ item.name }}' owner=root group=root mode=0644
       with_items: "{{ host_entries }}"

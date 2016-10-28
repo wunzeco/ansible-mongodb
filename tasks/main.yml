@@ -1,14 +1,9 @@
 ---
 
-- name: Import mongodb-org public key
-  apt_key: keyserver=keyserver.ubuntu.com id=EA312927
+- include_vars: "{{ ansible_os_family|lower }}.yml"
 
-- name: Add mongodb-org apt repository to sources.list
-  apt_repository: repo="{{ mongodb_apt_repo }}" state=present update_cache=yes
-
-- name: Install mongodb
-  apt: name=mongodb-org state=present
-  notify: Restart mongodb
+- name: MongoDB Install
+  include: "install-{{ ansible_os_family|lower }}.yml"
 
 - name: Ensure mongodb db data directory exists
   file:
@@ -21,7 +16,7 @@
 - name: Update mongodb config file
   template: 
     src:   mongod.conf.j2
-    dest:  /etc/mongod.conf
+    dest:  "{{ mongodb_conf_file }}"
     owner: root
     group: root
     mode:  0644
@@ -34,8 +29,8 @@
     owner: root
     group: root
     mode:  0644
+  when: mongodb_apply_defaults_settings and ansible_os_family|lower == 'debian'
   notify: Restart mongodb
-  when: mongodb_apply_defaults_settings 
 
 - name: Create disable-transparent-hugepages init script
   copy: 
@@ -56,6 +51,29 @@
   args:
     creates: /tmp/thp
   when: mongodb_disable_thp
+
+- name: Create tuned profile directory for transparent-hugepages
+  file:
+    path:  "/etc/tuned/no-thp"
+    owner: root
+    group: root
+    mode:  0755
+    state: directory
+  when: ansible_os_family|lower == 'redhat'
+
+- name: Create tuned profile config for transparent-hugepages
+  copy: 
+    src:   "no-thp-tuned.conf"
+    dest:  "/etc/tuned/no-thp/tuned.conf"
+    owner: root
+    group: root
+    mode:  0755
+  when: mongodb_disable_thp and ansible_os_family|lower == 'redhat'
+  register: tuned
+
+- name: Enable tuned profile to disable transparent-hugepages
+  shell: tuned-adm profile no-thp
+  when: tuned|change and mongodb_disable_thp and ansible_os_family|lower == 'redhat'
 
 - name: Start mongodb
   service: name=mongod enabled=yes state=started
