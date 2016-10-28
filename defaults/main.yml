@@ -12,7 +12,7 @@ mongodb_version:          3.2.10
 mongodb_major_version:    "{{ mongodb_version.split('.')|first }}"
 mongodb_minor_version:    "{{ mongodb_version.split('.')[1] }}"
 mongodb_repo_version:     "{{ mongodb_major_version }}.{{ mongodb_minor_version }}"
-mongodb_apt_repo:         "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse"
+mongodb_apt_repo:         "deb http://repo.mongodb.org/apt/ubuntu {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_version }} multiverse"
 mongodb_yum_repo_baseurl: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/{{ mongodb_repo_version }}/x86_64/"
 mongodb_signing_key_url:  "https://www.mongodb.org/static/pgp/server-3.2.asc"
 
