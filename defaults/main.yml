@@ -8,7 +8,7 @@ mongodb_conf_file: /etc/mongod.conf
 
 ###########
 ## Package
-mongodb_version:          3.2.12
+mongodb_version:          3.4.3
 mongodb_major_version:    "{{ mongodb_version.split('.')|first }}"
 mongodb_minor_version:    "{{ mongodb_version.split('.')[1] }}"
 mongodb_repo_version:     "{{ mongodb_major_version }}.{{ mongodb_minor_version }}"
