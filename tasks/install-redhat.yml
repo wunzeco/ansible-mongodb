@@ -13,3 +13,14 @@
     name:  "mongodb-org-{{ mongodb_version|default('*') }}"
     state: present
   notify: Restart mongodb
+
+- name: Ensure mongodb packages are up to date
+  yum:
+    name:  "{{ item }}-{{ mongodb_version|default('*') }}"
+    state: present
+  with_items: 
+    - mongodb-org-server
+    - mongodb-org-mongos
+    - mongodb-org-shell
+    - mongodb-org-tools
+  notify: Restart mongodb
