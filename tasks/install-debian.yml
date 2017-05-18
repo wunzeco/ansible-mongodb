@@ -23,17 +23,13 @@
     update_cache: yes
     state:        present
 
+# https://docs.mongodb.com/v3.0/tutorial/install-mongodb-on-ubuntu/#install-a-specific-release-of-mongodb
 - name: Install mongodb
-  apt:
-    name:  "mongodb-org={{ mongodb_version|default('*') }}"
-    state: present
-  notify: Restart mongodb
-
-- name: Ensure mongodb packages are up to date
   apt:
     name:  "{{ item }}={{ mongodb_version|default('*') }}"
     state: present
   with_items: 
+    - mongodb-org
     - mongodb-org-server
     - mongodb-org-mongos
     - mongodb-org-shell
