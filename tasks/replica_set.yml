@@ -22,8 +22,8 @@
 
 - name: Wait for mongo to come up in case it was restarted above
   wait_for:
-    host: {{ ansible_default_ipv4.address }}
-    port: {{ mongodb_net.port }}
+    host: "{{ ansible_default_ipv4.address }}"
+    port: "{{ mongodb_net.port }}"
 
 - name: Check if replica set has been initialized
   shell: >
