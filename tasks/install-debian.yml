@@ -9,13 +9,13 @@
   args:
     creates: /tmp/{{ mongodb_signing_key_url.split('/')|last }}
     warn:    false
-  when: "{{ ansible_python_version | version_compare('2.7.6', '<=') }}" 
+  when: ansible_python_version|version_compare('2.7.6', '<=')
 
 - name: Import mongodb-org gpg public signing key | python version > 2.7.6
   apt_key:
     url: "{{ mongodb_signing_key_url }}"
     state: present
-  when: "{{ ansible_python_version | version_compare('2.7.6', '>') }}" 
+  when: ansible_python_version|version_compare('2.7.6', '>')
 
 - name: Add mongodb-org apt repository to sources.list
   apt_repository:
@@ -28,7 +28,7 @@
   apt:
     name:  "{{ item }}={{ mongodb_version|default('*') }}"
     state: present
-  with_items: 
+  with_items:
     - mongodb-org
     - mongodb-org-server
     - mongodb-org-mongos
