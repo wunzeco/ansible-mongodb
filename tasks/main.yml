@@ -14,7 +14,7 @@
     state: directory
 
 - name: Update mongodb config file
-  template: 
+  template:
     src:   mongod.conf.j2
     dest:  "{{ mongodb_conf_file }}"
     owner: root
@@ -23,7 +23,7 @@
   notify: Restart mongodb
 
 - name: Update mongodb defaults settings config file
-  template: 
+  template:
     src:   etc.default.mongod.j2
     dest:  /etc/default/mongod
     owner: root
@@ -32,8 +32,16 @@
   when: mongodb_apply_defaults_settings and ansible_os_family|lower == 'debian'
   notify: Restart mongodb
 
+- name: Create mongodb logrotate config
+  template:
+    src:   logrotate.j2
+    dest:  /etc/logrotate.d/mongod
+    owner: root
+    group: root
+    mode:  0644
+
 - name: Create disable-transparent-hugepages init script
-  copy: 
+  copy:
     src:   disable-transparent-hugepages
     dest:  /etc/init.d/disable-transparent-hugepages
     owner: root
@@ -62,7 +70,7 @@
   when: ansible_os_family|lower == 'redhat'
 
 - name: Create tuned profile config for transparent-hugepages
-  copy: 
+  copy:
     src:   "no-thp-tuned.conf"
     dest:  "/etc/tuned/no-thp/tuned.conf"
     owner: root

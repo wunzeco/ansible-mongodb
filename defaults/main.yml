@@ -35,25 +35,26 @@ mongodb_storage:
 mongodb_systemLog:
  path:        "{{ mongodb_log_dir }}/mongod.log"
  logAppend:   true
+ logRotate:   reopen
  destination: file
 
 mongodb_net:
  port: 27017
  bindIp: "{{ ansible_default_ipv4.address }}"
 
-mongodb_processManagement:  {}           # See example config below 
-mongodb_security:           {}           # See example config below 
-mongodb_setParameter:       {}           # See example config below 
-mongodb_operationProfiling: {}           # See example config below 
-mongodb_replication:        {}           # See example config below 
-mongodb_sharding:           {}           # See example config below 
-mongodb_snmp:               {}           # See example config below 
+mongodb_processManagement:  {}           # See example config below
+mongodb_security:           {}           # See example config below
+mongodb_setParameter:       {}           # See example config below
+mongodb_operationProfiling: {}           # See example config below
+mongodb_replication:        {}           # See example config below
+mongodb_sharding:           {}           # See example config below
+mongodb_snmp:               {}           # See example config below
 
 
 
 ######################################
 ## ## EXAMPLE config
-## ## Warning: Replace values of options with your desired values. 
+## ## Warning: Replace values of options with your desired values.
 ##             For further documentation, please see:
 ##                http://docs.mongodb.org/manual/reference/configuration-options/
 #
@@ -72,13 +73,13 @@ mongodb_snmp:               {}           # See example config below
 ##            verbosity: 0
 ##       command:
 ##            verbosity: 0
-## 
+##
 ## #mongodb_processManagement: {}       # ideally, leave as empty dict or know what you are doing
-## 
+##
 ## mongodb_processManagement:
 ##     fork: "false"
 ##     pidFilePath: /var/run/mongod.pid
-## 
+##
 ## mongodb_net:
 ##    port: 27017
 ##    bindIp: localhost              # {{ ansible_default_ipv4.address }}
@@ -97,7 +98,7 @@ mongodb_snmp:               {}           # See example config below
 ##       mode: allowSSL
 ##       PEMKeyFile: /path/to/certificate.key
 ##       PEMKeyPassword: MyKeyPassword
-## 
+##
 ## #mongodb_security: {}       # ideally, leave as empty dict or know what you are doing
 ## mongodb_security:
 ##    keyFile: /path/to/keyfile
@@ -119,12 +120,12 @@ mongodb_snmp:               {}           # See example config below
 ##       clientCertificateFile: /path/to/clientCertFile
 ##       clientCertificatePassword: myclientCertPass
 ##       serverCAFile: /path/to/ca.pem
-## 
-## #mongodb_setParameter: {}       
+##
+## #mongodb_setParameter: {}
 ## mongodb_setParameter:
 ##     enableLocalhostAuthBypass: "false"
 ##     connPoolMaxShardedConnsPerHost: 250
-## 
+##
 ## mongodb_storage:
 ##    dbPath: /var/lib/mongodb                   # mongoD-only option
 ##    indexBuildRetry: "true"                    # mongoD-only option
@@ -145,27 +146,27 @@ mongodb_snmp:               {}           # See example config below
 ##          blockCompressor: snappy
 ##       indexConfig:
 ##          prefixCompression: "true"
-## 
+##
 ## mongodb_operationProfiling:
 ##    slowOpThresholdMs: 100                     # mongoD-only option
 ##    mode: off                                  # mongoD-only option
-## 
+##
 ## mongodb_replication:
 ##    oplogSizeMB: 1024                          # mongoD-only option
 ##    replSetName: myReplSet                     # mongoD-only option
 ##    secondaryIndexPrefetch: all                # mongoD-only option
 ##    enableMajorityReadConcern: "false"
 ##    localPingThresholdMs: 15                   # mongos-only option
-## 
+##
 ## mongodb_sharding:
 ##    clusterRole: shardsvr                      # mongoD-only option
-##    archiveMovedChunks: "false"                
+##    archiveMovedChunks: "false"
 ##    autoSplit: "true"                          # mongoS-only option
 ##    configDB: "configReplSet/cfgsvr1:port1"    # mongoS-only option
 ##    chunkSize: 64                              # mongoS-only option
-## 
+##
 ## # snmp opts only for mongod
 ## mongodb_snmp:
 ##    subagent: "true"                           # mongoD-only option
 ##    master: "false"                            # mongoD-only option
-## 
+##

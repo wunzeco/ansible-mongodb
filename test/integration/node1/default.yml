@@ -18,7 +18,7 @@
   pre_tasks:
     - name: Set bind ip
       set_fact: mongodb_net_bind_ip="{{ ansible_enp0s8.ipv4.address }}"
-      when: ansible_os_family|lower == 'redhat'
+      when: ansible_service_mgr == 'systemd'
 
     - name: Add host entries for mongodb replica set members
       lineinfile: dest=/etc/hosts regexp='^{{ item.ip }}' line='{{ item.ip }} {{ item.name }}' owner=root group=root mode=0644

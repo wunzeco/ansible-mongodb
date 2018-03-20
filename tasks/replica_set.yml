@@ -22,13 +22,13 @@
 
 - name: Wait for mongo to come up in case it was restarted above
   wait_for:
-    host: "{{ ansible_default_ipv4.address }}"
-    port: "{{ mongodb_net.port }}"
+    host: "{{ mongodb_net.bindIp|default(ansible_default_ipv4.address) }}"
+    port: "{{ mongodb_net.port|default(27017) }}"
 
 - name: Check if replica set has been initialized
   shell: >
       mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
-          --quiet --eval "rs.status().ok" 
+          --quiet --eval "rs.status().ok"
   register: rs_ok
 
 #- debug: var=rs_ok
@@ -53,14 +53,14 @@
 
 - name: Set variable for current members
   set_fact: rs_members="{{ members.stdout|string|from_json }}"
-  
+
 - debug: var=rs_members
 
 - name: List of new mongodb replica set members (secondaries) to add
   debug: msg="{{ mongodb_replica_set_members|difference(rs_members|default([])) }}"
 
 - name: Add mongodb secondaries to replica set
-  shell: > 
+  shell: >
       mongo --host {{ mongodb_net.bindIp }} --port {{ mongodb_net.port }} \
           --quiet --eval 'rs.add("{{ item }}")'
   with_items: "{{ mongodb_replica_set_members|difference(rs_members|default([])) }}"

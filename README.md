@@ -9,7 +9,7 @@ Features:
 - Creates replica set (without access control or authentication)
 
 
-> **WARNING:** 
+> **WARNING:**
 >
 >    Ensure you quote and lowercase any booleans. Unfortunately, mongodb
 >    config options parser ONLY recognises "true" and "false" as boolean
@@ -67,7 +67,7 @@ Features:
     - wunzeco.mongodb
 ```
 
-It is **recommended** that your replica set members have resolveable names. So 
+It is **recommended** that your replica set members have resolveable names. So
 use FQDN for each replica set member (not IP, especially in production).
 
 ## Testing
@@ -75,11 +75,11 @@ use FQDN for each replica set member (not IP, especially in production).
 To run integration tests of this role
 
 ```
-PLATFORM=ubuntu                              # OR centos
+PLATFORM=ubuntu-1404     # OR ubuntu-1604, centos
 kitchen verify $PLATFORM && kitchen destroy $PLATFORM
 ```
 
-> **Note:**  
+> **Note:**
 >	`kitchen test` command is not appropriate for this role because both kitchen
 >    suites (instances) need to be up and running for all tests to pass.
 

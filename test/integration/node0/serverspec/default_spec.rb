@@ -33,6 +33,12 @@ describe file('/etc/mongod.conf') do
   it { should be_owned_by 'root' }
 end
 
+describe file('/etc/logrotate.d/mongod') do
+  it { should be_file }
+  it { should be_mode 644 }
+  it { should be_owned_by 'root' }
+end
+
 describe service('mongod') do
   it { should be_enabled }
   it { should be_running }
