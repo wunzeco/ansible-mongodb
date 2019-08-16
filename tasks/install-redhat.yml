@@ -20,3 +20,24 @@
     - mongodb-org-shell
     - mongodb-org-tools
   notify: Restart mongodb
+
+- name: RHEL | Set permissions and SELinux context on log and data directories
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_user }}"
+    mode: 0755
+    setype: "{{ item.type }}"
+    state: directory
+  with_items:
+    - path: "{{ mongodb_data_dir }}"
+      type: mongod_var_lib_t
+    - path: "{{ mongodb_log_dir }}"
+      type: mongod_log_t
+
+- name: RHEL | Configure SELinux
+  seport:
+    ports: "{{ mongodb_net.port }}"
+    proto: tcp
+    setype: mongod_port_t
+    state: present

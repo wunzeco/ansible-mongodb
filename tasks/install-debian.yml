@@ -35,3 +35,11 @@
     - mongodb-org-shell
     - mongodb-org-tools
   notify: Restart mongodb
+
+- name: Ensure mongodb db data directory exists
+  file:
+    path:  "{{ mongodb_data_dir }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+    mode:  0755
+    state: directory
