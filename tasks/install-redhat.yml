@@ -41,3 +41,10 @@
     proto: tcp
     setype: mongod_port_t
     state: present
+
+- name: Configure firewalld
+  firewalld:
+    port: "{{ mongodb_net.port }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
