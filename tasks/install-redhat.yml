@@ -42,6 +42,11 @@
     setype: mongod_port_t
     state: present
 
+- name: Start firewalld
+  systemd:
+    name: firewalld
+    state: started
+
 - name: Configure firewalld
   firewalld:
     port: "{{ mongodb_net.port }}/tcp"
