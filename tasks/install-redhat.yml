@@ -42,6 +42,9 @@
     setype: mongod_port_t
     state: present
 
+- include_tasks: semodule.yml
+  when: mongodb_semodule_install
+
 - name: Start firewalld
   systemd:
     name: firewalld
