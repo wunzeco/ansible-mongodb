@@ -1,0 +1,35 @@
+---
+
+- name: Copy type enforcement files.
+  file:
+    path: "{{ mongodb_semodule_file_type_enforcement_dest }}"
+    state: directory
+
+- name: Copy type enforcement files.
+  copy:
+    dest: "{{ mongodb_semodule_file_type_enforcement_dest }}"
+    src: "{{ item }}"
+  register: results
+  with_items: "{{ mongodb_semodule_te_items }}"
+
+- name: checkmodule
+  shell: "checkmodule -M -m -o {{ item.item|basename|replace('.te', '.mod') }} {{ item.item|basename }}"
+  args:
+    chdir: "{{ mongodb_semodule_file_type_enforcement_dest }}"
+  when: "{{ item.changed }}"
+  with_items: "{{ results.results }}"
+
+- name: semodule_package
+  shell: "semodule_package -o {{ item.item|basename|replace('.te', '.pp') }} -m {{ item.item|basename|replace('.te', '.mod') }}"
+  args:
+    chdir: "{{ mongodb_semodule_file_type_enforcement_dest }}"
+  when: "{{ item.changed }}"
+  with_items: "{{ results.results }}"
+
+- name: semodule
+  shell: "semodule -i {{ item.item|basename|replace('.te', '.pp') }}"
+  args:
+    chdir: "{{ mongodb_semodule_file_type_enforcement_dest }}"
+  when: "{{ item.changed }}"
+  with_items: "{{ results.results }}"
+  

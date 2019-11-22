@@ -1,0 +1,12 @@
+# Allows SSH port forwarding to Mongo - used for GUI access to DBs
+
+module sshd_mongod_port_forward_allow 1.0;
+
+require {
+        type sshd_t;
+        type mongod_port_t;
+        class tcp_socket name_connect;
+}
+
+#============= sshd_t ==============
+allow sshd_t mongod_port_t:tcp_socket name_connect;

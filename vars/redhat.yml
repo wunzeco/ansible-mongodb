@@ -6,3 +6,5 @@ mongodb_group: "{{ mongodb_user }}"
 mongodb_processManagement:
   fork: "true"
   pidFilePath: /var/run/mongodb/mongod.pid
+
+mongodb_semodule_install: true
