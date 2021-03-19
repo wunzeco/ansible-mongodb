@@ -54,7 +54,8 @@ mongodb_semodule_install: false
 mongodb_semodule_file_type_enforcement_dest: /etc/selinux/te
 mongodb_semodule_te_items:
   - sshd_mongod_port_forward_allow.te
-  - my-ftdc.te  
+  - mongodb_proc_net.te
+  - mongodb_cgroup_memory.te
 
 
 

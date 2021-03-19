@@ -1,0 +1,10 @@
+module mongodb_proc_net 1.0;
+
+require {
+    type proc_net_t;
+    type mongod_t;
+    class file { open read };
+}
+
+#============= mongod_t ==============
+allow mongod_t proc_net_t:file { open read };
