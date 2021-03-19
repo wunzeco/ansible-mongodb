@@ -1,0 +1,11 @@
+# Allow /usr/bin/mongod read access on the file /proc/net/snmp
+module my-ftdc 1.0;
+
+require {
+	type proc_net_t;
+	type mongod_t;
+	class file read;
+}
+
+#============= mongod_t ==============
+allow mongod_t proc_net_t:file read;

@@ -5,14 +5,6 @@
 - name: MongoDB Install
   include: "install-{{ ansible_os_family|lower }}.yml"
 
-- name: Ensure mongodb db data directory exists
-  file:
-    path:  "{{ mongodb_data_dir }}"
-    owner: "{{ mongodb_user }}"
-    group: "{{ mongodb_group }}"
-    mode:  0755
-    state: directory
-
 - name: Update mongodb config file
   template:
     src:   mongod.conf.j2
